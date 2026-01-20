@@ -1,9 +1,11 @@
 package org.example.services;
 
-import org.example.model.Book;
+import org.example.dto.BookDto;
+import org.example.dto.CreateBookRequestDto;
 import java.util.List;
 
 public interface BookService {
-    Book save(Book book);
-    List<Book> findAll();
+    List<BookDto> getAll();
+    BookDto getById(Long id);
+    BookDto create(CreateBookRequestDto requestDto);
 }

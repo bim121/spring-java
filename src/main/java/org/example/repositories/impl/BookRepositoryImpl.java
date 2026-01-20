@@ -3,6 +3,8 @@ package org.example.repositories.impl;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import java.util.List;
+import java.util.Optional;
+
 import org.example.model.Book;
 import org.example.repositories.BookRepository;
 import org.springframework.stereotype.Repository;
@@ -21,5 +23,10 @@ public class BookRepositoryImpl implements BookRepository {
     @Override
     public List<Book> findAll() {
         return em.createQuery("SELECT b FROM Book b", Book.class).getResultList();
+    }
+
+    @Override
+    public Optional<Book> findById(Long id) {
+        return Optional.ofNullable(em.find(Book.class, id));
     }
 }
