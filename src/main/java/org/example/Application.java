@@ -2,7 +2,8 @@ package org.example;
 
 import java.math.BigDecimal;
 import java.util.List;
-import org.example.model.Book;
+import org.example.dto.BookDto;
+import org.example.dto.CreateBookRequestDto;
 import org.example.services.BookService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -18,20 +19,28 @@ public class Application {
     @Bean
     public CommandLineRunner commandLineRunner(BookService bookService) {
         return args -> {
-            System.out.println("save book");
-            Book book = new Book();
-            book.setTitle("Sherlock Holmes");
-            book.setAuthor("Konan Doyle");
-            book.setIsbn("3576789890");
-            book.setPrice(new BigDecimal("29.99"));
-            book.setDescription("awesome");
-            book.setCoverImage("https://sherlock.jpg");
-            bookService.save(book);
-            System.out.println(book.getTitle());
-            System.out.println("get all");
-            List<Book> books = bookService.findAll();
-            for (Book b: books) {
-                System.out.println(b.getTitle());
+            System.out.println("create book");
+            CreateBookRequestDto newBook = new CreateBookRequestDto();
+            newBook.setTitle("Sherlock Holmes");
+            newBook.setAuthor("Konan Doyle");
+            newBook.setIsbn("3576789890");
+            newBook.setPrice(new BigDecimal("29.99"));
+            newBook.setDescription("awesome");
+            newBook.setCoverImage("https://sherlock.jpg");
+            BookDto savedBook = bookService.create(newBook);
+            System.out.println("save book: " + savedBook.getTitle());
+            System.out.println("get all books");
+            List<BookDto> books = bookService.getAll();
+            for (BookDto b : books) {
+                System.out.println("book: " + b.getTitle() + " | author: " + b.getAuthor());
+            }
+            System.out.println("get book by id");
+            Long id = savedBook.getId();
+            BookDto bookById = bookService.getById(id);
+            if (bookById != null) {
+                System.out.println("find: " + bookById.getTitle());
+            } else {
+                System.out.println("don't find book with id " + id);
             }
         };
     }

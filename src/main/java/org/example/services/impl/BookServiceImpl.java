@@ -1,6 +1,8 @@
 package org.example.services.impl;
 
 import jakarta.transaction.Transactional;
+import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.example.dto.BookDto;
 import org.example.dto.CreateBookRequestDto;
 import org.example.exceptions.EntityNotFoundException;
@@ -9,8 +11,6 @@ import org.example.model.Book;
 import org.example.repositories.BookRepository;
 import org.example.services.BookService;
 import org.springframework.stereotype.Service;
-import java.util.List;
-import lombok.RequiredArgsConstructor;
 
 @Transactional
 @Service
@@ -39,7 +39,7 @@ public class BookServiceImpl implements BookService {
     @Override
     public BookDto create(CreateBookRequestDto requestDto) {
         Book book = bookMapper.toEntity(requestDto);
-        Book saved = bookRepository.save(book);
-        return bookMapper.toDto(saved);
+        bookRepository.save(book);
+        return bookMapper.toDto(book);
     }
 }
