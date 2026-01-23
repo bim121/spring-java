@@ -1,9 +1,10 @@
 package org.example.repositories;
 
-import org.example.model.Book;
 import java.util.List;
+import org.example.model.Book;
 
 public interface BookRepository {
     Book save(Book book);
+
     List<Book> findAll();
 }
