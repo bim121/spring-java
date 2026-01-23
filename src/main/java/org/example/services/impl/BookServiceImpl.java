@@ -10,18 +10,14 @@ import org.example.repositories.BookRepository;
 import org.example.services.BookService;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 
 @Transactional
 @Service
+@RequiredArgsConstructor
 public class BookServiceImpl implements BookService {
     private final BookRepository bookRepository;
     private final BookMapper bookMapper;
-
-    public BookServiceImpl(BookRepository bookRepository,
-                           BookMapper bookMapper) {
-        this.bookRepository = bookRepository;
-        this.bookMapper = bookMapper;
-    }
 
     @Override
     public List<BookDto> getAll() {

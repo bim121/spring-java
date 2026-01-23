@@ -1,7 +1,6 @@
 package org.example.repositories.impl;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -11,18 +10,17 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class BookRepositoryImpl implements BookRepository {
-    @PersistenceContext
-    private EntityManager em;
+    private List<Book> books = new ArrayList<>();
 
     @Override
     public Book save(Book book) {
-        em.persist(book);
+        books.add(book);
         return book;
     }
 
     @Override
     public List<Book> findAll() {
-        return em.createQuery("SELECT b FROM Book b", Book.class).getResultList();
+        return books;
     }
 
     @Override
