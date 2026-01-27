@@ -42,6 +42,36 @@ public class Application {
             } else {
                 System.out.println("don't find book with id " + id);
             }
+            System.out.println("\nUpdated book");
+            CreateBookRequestDto updateDto = new CreateBookRequestDto();
+            updateDto.setTitle("Sherlock Holmes (Updated)");
+            updateDto.setAuthor("Arthur Conan Doyle");
+            updateDto.setIsbn("3576789890");
+            updateDto.setPrice(new BigDecimal("19.99"));
+            updateDto.setDescription("updated description");
+            updateDto.setCoverImage("https://sherlock-updated.jpg");
+            BookDto updatedBook = bookService.update(id, updateDto);
+            System.out.println("Updated title: " + updatedBook.getTitle());
+            System.out.println("Updated price: " + updatedBook.getPrice());
+            System.out.println("\ndelete book(soft delete)");
+            bookService.delete(id);
+            System.out.println("Book deleted (soft)");
+            System.out.println("\ntry get deleted book");
+            try {
+                bookService.getById(id);
+                System.out.println("error: deleted book is still accessible");
+            } catch (Exception e) {
+                System.out.println("Deleted book not found (good!)");
+            }
+            System.out.println("\nget all book after delete");
+            List<BookDto> booksAfterDelete = bookService.getAll();
+            if (booksAfterDelete.isEmpty()) {
+                System.out.println("No books returned (soft delete works)");
+            } else {
+                booksAfterDelete.forEach(b ->
+                        System.out.println(b.getId() + " | " + b.getTitle())
+                );
+            }
         };
     }
 }

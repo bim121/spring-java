@@ -1,13 +1,10 @@
 package org.example.repositories;
 
-import java.util.List;
 import java.util.Optional;
 import org.example.model.Book;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface BookRepository {
-    Book save(Book book);
+public interface BookRepository extends JpaRepository<Book, Long> {
 
-    List<Book> findAll();
-
-    Optional<Book> findById(Long id);
+    Optional<Book> findByIdAndDeletedFalse(Long id);
 }
