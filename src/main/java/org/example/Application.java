@@ -23,7 +23,7 @@ public class Application {
             CreateBookRequestDto newBook = new CreateBookRequestDto();
             newBook.setTitle("Sherlock Holmes");
             newBook.setAuthor("Konan Doyle");
-            newBook.setIsbn("3587678788890");
+            newBook.setIsbn("35876787858890");
             newBook.setPrice(new BigDecimal("29.99"));
             newBook.setDescription("awesome");
             newBook.setCoverImage("https://sherlock.jpg");
@@ -46,7 +46,7 @@ public class Application {
             CreateBookRequestDto updateDto = new CreateBookRequestDto();
             updateDto.setTitle("Sherlock Holmes (Updated)");
             updateDto.setAuthor("Arthur Conan Doyle");
-            updateDto.setIsbn("35768557679890");
+            updateDto.setIsbn("357685576793890");
             updateDto.setPrice(new BigDecimal("19.99"));
             updateDto.setDescription("updated description");
             updateDto.setCoverImage("https://sherlock-updated.jpg");

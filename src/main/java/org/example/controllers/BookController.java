@@ -1,5 +1,6 @@
 package org.example.controllers;
 
+import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.example.dto.BookDto;
@@ -39,7 +40,7 @@ public class BookController {
     }
 
     @PostMapping
-    public ResponseEntity<BookDto> createBook(@RequestBody CreateBookRequestDto bookDto) {
+    public ResponseEntity<BookDto> createBook(@Valid @RequestBody CreateBookRequestDto bookDto) {
         BookDto created = bookService.create(bookDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
