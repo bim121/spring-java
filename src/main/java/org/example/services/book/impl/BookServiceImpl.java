@@ -1,14 +1,14 @@
-package org.example.services.impl;
+package org.example.services.book.impl;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.example.dto.BookDto;
-import org.example.dto.CreateBookRequestDto;
+import org.example.dto.book.BookDto;
+import org.example.dto.book.CreateBookRequestDto;
 import org.example.exceptions.EntityNotFoundException;
 import org.example.mappers.BookMapper;
 import org.example.model.Book;
 import org.example.repositories.BookRepository;
-import org.example.services.BookService;
+import org.example.services.book.BookService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;

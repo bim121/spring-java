@@ -1,9 +1,13 @@
 package org.example;
 
 import java.math.BigDecimal;
-import org.example.dto.BookDto;
-import org.example.dto.CreateBookRequestDto;
-import org.example.services.BookService;
+import org.example.dto.book.BookDto;
+import org.example.dto.book.CreateBookRequestDto;
+import org.example.dto.user.UserRegistrationRequestDto;
+import org.example.dto.user.UserResponseDto;
+import org.example.exceptions.RegistrationException;
+import org.example.services.auth.AuthenticationService;
+import org.example.services.book.BookService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -20,14 +24,15 @@ public class Application {
     }
 
     @Bean
-    public CommandLineRunner commandLineRunner(BookService bookService) {
+    public CommandLineRunner commandLineRunner(BookService bookService,
+                                               AuthenticationService authenticationService) {
         return args -> {
 
             System.out.println("create book");
             CreateBookRequestDto newBook = new CreateBookRequestDto();
             newBook.setTitle("Sherlock Holmes");
             newBook.setAuthor("Konan Doyle");
-            newBook.setIsbn("3587678785855890");
+            newBook.setIsbn("35871785855890");
             newBook.setPrice(new BigDecimal("29.99"));
             newBook.setDescription("awesome");
             newBook.setCoverImage("https://sherlock.jpg");
@@ -54,7 +59,7 @@ public class Application {
             CreateBookRequestDto updateDto = new CreateBookRequestDto();
             updateDto.setTitle("Sherlock Holmes (Updated)");
             updateDto.setAuthor("Arthur Conan Doyle");
-            updateDto.setIsbn("3576855767938490");
+            updateDto.setIsbn("357683767938490");
             updateDto.setPrice(new BigDecimal("19.99"));
             updateDto.setDescription("updated description");
             updateDto.setCoverImage("https://sherlock-updated.jpg");
@@ -78,6 +83,41 @@ public class Application {
                 pageAfterDelete.getContent().forEach(b ->
                         System.out.println(b.getId() + " | " + b.getTitle())
                 );
+            }
+            System.out.println("\nuser registration service test");
+            UserRegistrationRequestDto userDto = new UserRegistrationRequestDto();
+            userDto.setEmail("john.doe@example.com");
+            userDto.setPassword("12345678");
+            userDto.setRepeatPassword("12345678");
+            userDto.setFirstName("John");
+            userDto.setLastName("Doe");
+            userDto.setShippingAddress("123 Main St, City, Country");
+            try {
+                UserResponseDto savedUser = authenticationService.register(userDto);
+                System.out.println("User registered successfully: "
+                        + savedUser.getEmail()
+                        + " | ID: "
+                        + savedUser.getId());
+            } catch (RegistrationException e) {
+                System.out.println("Registration failed: " + e.getMessage());
+            }
+            try {
+                authenticationService.register(userDto);
+            } catch (RegistrationException e) {
+                System.out.println("Duplicate email registration correctly failed: "
+                        + e.getMessage());
+            }
+            UserRegistrationRequestDto userWrongPassword = new UserRegistrationRequestDto();
+            userWrongPassword.setEmail("jane.doe@example.com");
+            userWrongPassword.setPassword("password1");
+            userWrongPassword.setRepeatPassword("password2");
+            userWrongPassword.setFirstName("Jane");
+            userWrongPassword.setLastName("Doe");
+            userWrongPassword.setShippingAddress("456 Main St, City, Country");
+            try {
+                authenticationService.register(userWrongPassword);
+            } catch (RegistrationException e) {
+                System.out.println("Password mismatch correctly failed: " + e.getMessage());
             }
         };
     }
