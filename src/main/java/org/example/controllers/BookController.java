@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,6 +31,7 @@ public class BookController {
     private final BookService bookService;
 
     @Operation(summary = "Get all books with pagination and sorting")
+    @PreAuthorize("hasRole('USER')")
     @GetMapping
     public Page<BookDto> getAll(
             @PageableDefault(size = 10, sort = "id") Pageable pageable
@@ -38,6 +40,7 @@ public class BookController {
     }
 
     @Operation(summary = "Get book by id")
+    @PreAuthorize("hasRole('USER')")
     @GetMapping("/{id}")
     public ResponseEntity<BookDto> getBookById(@PathVariable Long id) {
         BookDto book = bookService.getById(id);
@@ -48,6 +51,7 @@ public class BookController {
         }
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Create a new book")
     @PostMapping
     public ResponseEntity<BookDto> createBook(@Valid @RequestBody CreateBookRequestDto bookDto) {
@@ -55,6 +59,7 @@ public class BookController {
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Update existing book")
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
@@ -65,6 +70,7 @@ public class BookController {
         return bookService.update(id, dto);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Delete book by id (soft delete)")
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
