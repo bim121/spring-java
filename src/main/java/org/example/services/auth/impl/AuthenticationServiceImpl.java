@@ -17,8 +17,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final UserMapper userMapper;
 
     @Override
-    public UserResponseDto register(UserRegistrationRequestDto request)
-            throws RegistrationException {
+    public UserResponseDto register(UserRegistrationRequestDto request) {
         if (userService.existsByEmail(request.getEmail())) {
             throw new RegistrationException("Email already in use");
         }
