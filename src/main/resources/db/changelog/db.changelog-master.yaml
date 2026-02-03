@@ -13,3 +13,5 @@ databaseChangeLog:
       file: db/changelog/changes/006-insert-admin-user.yaml
   - include:
       file: db/changelog/changes/007-assign-admin-role.yaml
+  - include:
+      file: db/changelog/changes/008-add-is-deleted-to-users.yaml

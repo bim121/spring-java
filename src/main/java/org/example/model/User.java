@@ -15,6 +15,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -23,6 +25,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Table(name = "users")
 @Getter
 @Setter
+@SQLDelete(sql = "UPDATE users SET is_deleted = true WHERE id = ?")
+@SQLRestriction("is_deleted = false")
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,7 +46,10 @@ public class User implements UserDetails {
 
     private String shippingAddress;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @Column(name = "is_deleted", nullable = false)
+    private boolean isDeleted = false;
+
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "users_roles",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -79,6 +86,6 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return !isDeleted;
     }
 }

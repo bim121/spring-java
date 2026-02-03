@@ -9,8 +9,8 @@ import org.example.exceptions.RegistrationException;
 import org.example.mappers.UserMapper;
 import org.example.model.Role;
 import org.example.model.User;
-import org.example.repositories.RoleRepository;
 import org.example.services.auth.AuthenticationService;
+import org.example.services.roles.RoleService;
 import org.example.services.user.UserService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -21,7 +21,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final UserService userService;
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
-    private final RoleRepository roleRepository;
+    private final RoleService roleService;
 
     @Override
     public UserResponseDto register(UserRegistrationRequestDto request) {
@@ -33,8 +33,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         }
         User user = userMapper.toEntity(request);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
-        Role userRole = roleRepository.findByName(RoleName.ROLE_USER)
-                .orElseThrow(() -> new RuntimeException("ROLE_USER not found"));
+        Role userRole = roleService.getByName(RoleName.ROLE_USER);
         user.setRoles(Set.of(userRole));
         return userMapper.toDto(userService.save(user));
     }
