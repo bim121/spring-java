@@ -28,7 +28,7 @@ public class AuthenticationController {
     @ResponseStatus(HttpStatus.CREATED)
     public UserResponseDto register(
             @Valid @RequestBody UserRegistrationRequestDto request
-    ) throws RegistrationException {
+    ) {
         return authenticationService.register(request);
     }
 }
