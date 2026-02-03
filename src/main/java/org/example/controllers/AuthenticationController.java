@@ -6,7 +6,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.dto.user.UserRegistrationRequestDto;
 import org.example.dto.user.UserResponseDto;
-import org.example.exceptions.RegistrationException;
 import org.example.services.auth.AuthenticationService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
