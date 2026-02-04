@@ -4,5 +4,5 @@ import org.example.enums.RoleName;
 import org.example.model.Role;
 
 public interface RoleService {
-    Role getByName(RoleName roleName);
+    Role findByName(RoleName roleName);
 }

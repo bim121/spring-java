@@ -14,7 +14,7 @@ public class RoleServiceImpl implements RoleService {
     private final RoleRepository roleRepository;
 
     @Override
-    public Role getByName(RoleName roleName) {
+    public Role findByName(RoleName roleName) {
         return roleRepository.findByName(roleName)
                 .orElseThrow(() ->
                         new RuntimeException("Role " + roleName + " not found"));
