@@ -4,6 +4,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.example.dto.user.UserLoginRequestDto;
+import org.example.dto.user.UserLoginResponseDto;
 import org.example.dto.user.UserRegistrationRequestDto;
 import org.example.dto.user.UserResponseDto;
 import org.example.services.auth.AuthenticationService;
@@ -29,5 +31,13 @@ public class AuthenticationController {
             @Valid @RequestBody UserRegistrationRequestDto request
     ) {
         return authenticationService.register(request);
+    }
+
+    @PostMapping("/login")
+    @Operation(summary = "Authenticate user and return JWT token")
+    public UserLoginResponseDto login(
+            @Valid @RequestBody UserLoginRequestDto request
+    ) {
+        return authenticationService.login(request);
     }
 }
