@@ -21,11 +21,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         if (userService.existsByEmail(request.getEmail())) {
             throw new RegistrationException("Email already in use");
         }
-        if (!request.getPassword().equals(request.getRepeatPassword())) {
-            throw new RegistrationException("Passwords do not match");
-        }
         User user = userMapper.toEntity(request);
-        User saved = userService.save(user);
-        return userMapper.toDto(saved);
+        userService.save(user);
+        return userMapper.toDto(user);
     }
 }
