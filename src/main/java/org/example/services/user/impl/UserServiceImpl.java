@@ -1,6 +1,7 @@
 package org.example.services.user.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.example.exceptions.EntityNotFoundException;
 import org.example.model.User;
 import org.example.repositories.UserRepository;
 import org.example.services.user.UserService;
@@ -20,5 +21,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public User save(User user) {
         return userRepository.save(user);
+    }
+
+    @Override
+    public Long getUserIdByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException("User not found with email: "
+                        + email))
+                .getId();
     }
 }

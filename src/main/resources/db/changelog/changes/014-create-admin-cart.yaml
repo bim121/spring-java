@@ -1,0 +1,11 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-admin-cart
+      author: bim121
+      changes:
+        - insert:
+            tableName: shopping_cart
+            columns:
+              - column:
+                  name: user_id
+                  valueComputed: "(SELECT id FROM users WHERE email='admin@gmail.com')"

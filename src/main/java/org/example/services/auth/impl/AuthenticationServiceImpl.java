@@ -13,6 +13,7 @@ import org.example.mappers.UserMapper;
 import org.example.model.Role;
 import org.example.model.User;
 import org.example.services.auth.AuthenticationService;
+import org.example.services.cart.ShoppingCartService;
 import org.example.services.roles.RoleService;
 import org.example.services.user.UserService;
 import org.example.util.JwtUtil;
@@ -31,6 +32,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final RoleService roleService;
     private final JwtUtil jwtUtil;
+    private final ShoppingCartService shoppingCartService;
     private final AuthenticationManager authenticationManager;
 
     @Override
@@ -42,7 +44,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         Role userRole = roleService.findByName(RoleName.ROLE_USER);
         user.setRoles(Set.of(userRole));
-        return userMapper.toDto(userService.save(user));
+        userService.save(user);
+        shoppingCartService.createCartForUser(user);
+        return userMapper.toDto(user);
     }
 
     @Override
