@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.dto.book.BookDtoWithoutCategoryIds;
 import org.example.dto.category.CategoryDto;
 import org.example.services.category.CategoryService;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
@@ -37,7 +38,7 @@ public class CategoryController {
 
     @PreAuthorize("hasRole('USER')")
     @GetMapping
-    public List<CategoryDto> getAll(@PageableDefault Pageable pageable) {
+    public Page<CategoryDto> getAll(@PageableDefault Pageable pageable) {
         return categoryService.findAll(pageable);
     }
 

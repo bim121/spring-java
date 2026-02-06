@@ -10,7 +10,7 @@ public class CategoryDto {
 
     private Long id;
 
-    @NotBlank
+    @NotBlank(message = "Category name is mandatory field")
     private String name;
 
     private String description;
