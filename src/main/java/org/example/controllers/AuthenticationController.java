@@ -9,6 +9,7 @@ import org.example.dto.user.UserLoginResponseDto;
 import org.example.dto.user.UserRegistrationRequestDto;
 import org.example.dto.user.UserResponseDto;
 import org.example.services.auth.AuthenticationService;
+import org.example.services.user.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthenticationController {
 
     private final AuthenticationService authenticationService;
+    private final UserService userService;
 
     @Operation(summary = "Register a new user")
     @PostMapping("/registration")
@@ -30,7 +32,7 @@ public class AuthenticationController {
     public UserResponseDto register(
             @Valid @RequestBody UserRegistrationRequestDto request
     ) {
-        return authenticationService.register(request);
+        return userService.register(request);
     }
 
     @PostMapping("/login")
