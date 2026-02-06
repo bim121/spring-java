@@ -1,9 +1,11 @@
 package org.example.dto.cart;
 
 import java.util.Set;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 public class ShoppingCartDto {
     private Long id;
     private Long userId;

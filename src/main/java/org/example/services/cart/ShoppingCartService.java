@@ -8,15 +8,13 @@ import org.example.model.ShoppingCart;
 import org.example.model.User;
 
 public interface ShoppingCartService {
-    ShoppingCartDto getCart(Long userId);
-
-    CartItemDto addBookToCart(Long userId, AddToCartRequestDto dto);
-
     CartItemDto updateCartItem(Long cartItemId, UpdateCartItemRequestDto dto);
 
     void removeCartItem(Long cartItemId);
 
     ShoppingCart createCartForUser(User user);
 
-    ShoppingCart getCartByUser(User user);
+    ShoppingCartDto getCartByUserEmail(String email);
+
+    CartItemDto addBookToCartByUserEmail(String email, AddToCartRequestDto dto);
 }

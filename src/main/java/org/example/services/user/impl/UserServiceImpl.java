@@ -1,5 +1,6 @@
 package org.example.services.user.impl;
 
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.example.dto.user.UserRegistrationRequestDto;
 import org.example.dto.user.UserResponseDto;
@@ -10,12 +11,11 @@ import org.example.mappers.UserMapper;
 import org.example.model.Role;
 import org.example.model.User;
 import org.example.repositories.UserRepository;
+import org.example.services.cart.ShoppingCartService;
 import org.example.services.roles.RoleService;
 import org.example.services.user.UserService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -25,6 +25,7 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final RoleService roleService;
     private final UserRepository userRepository;
+    private final ShoppingCartService shoppingCartService;
 
     @Override
     public boolean existsByEmail(String email) {
@@ -53,6 +54,7 @@ public class UserServiceImpl implements UserService {
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         Role role = roleService.findByName(RoleName.ROLE_USER);
         user.setRoles(Set.of(role));
+        shoppingCartService.createCartForUser(user);
         return userMapper.toDto(userRepository.save(user));
     }
 }
