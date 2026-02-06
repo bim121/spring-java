@@ -55,7 +55,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     private ShoppingCart findCartByUserEmail(String email) {
         return cartRepository.findByUserEmail(email)
                 .orElseThrow(() -> new EntityNotFoundException(
-                        "Cart not found for user " + email
+                        "Cart not found for user: " + email
                 ));
     }
 }
