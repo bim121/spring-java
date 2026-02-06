@@ -2,6 +2,8 @@ package org.example.services.category.impl;
 
 import jakarta.transaction.Transactional;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.example.dto.book.BookDtoWithoutCategoryIds;
 import org.example.dto.category.CategoryDto;
@@ -12,6 +14,7 @@ import org.example.model.Category;
 import org.example.repositories.BookRepository;
 import org.example.repositories.CategoryRepository;
 import org.example.services.category.CategoryService;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -26,10 +29,9 @@ public class CategoryServiceImpl implements CategoryService {
     private final BookMapper bookMapper;
 
     @Override
-    public List<CategoryDto> findAll(Pageable pageable) {
+    public Page<CategoryDto> findAll(Pageable pageable) {
         return categoryRepository.findAll(pageable)
-                .map(categoryMapper::toDto)
-                .getContent();
+                .map(categoryMapper::toDto);
     }
 
     @Override
@@ -53,8 +55,7 @@ public class CategoryServiceImpl implements CategoryService {
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() ->
                         new EntityNotFoundException("Category not found: " + id));
-        category.setName(dto.getName());
-        category.setDescription(dto.getDescription());
+        categoryMapper.updateCategoryFromDto(dto, category);
         return categoryMapper.toDto(category);
     }
 
@@ -68,5 +69,14 @@ public class CategoryServiceImpl implements CategoryService {
         return bookRepository.findAllByCategories_Id(id).stream()
                 .map(bookMapper::toDtoWithoutCategories)
                 .toList();
+    }
+
+    @Override
+    public Set<Category> getCategoriesByIds(Set<Long> categoryIds) {
+        return categoryIds.stream()
+                .map(id -> categoryRepository.findById(id)
+                        .orElseThrow(() ->
+                                new EntityNotFoundException("Category not found: " + id)))
+                .collect(Collectors.toSet());
     }
 }
