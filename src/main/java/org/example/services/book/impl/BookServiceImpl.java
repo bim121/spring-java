@@ -9,6 +9,7 @@ import org.example.mappers.BookMapper;
 import org.example.model.Book;
 import org.example.repositories.BookRepository;
 import org.example.services.book.BookService;
+import org.example.services.category.CategoryService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class BookServiceImpl implements BookService {
     private final BookRepository bookRepository;
+    private final CategoryService categoryService;
     private final BookMapper bookMapper;
 
     @Override
@@ -39,6 +41,9 @@ public class BookServiceImpl implements BookService {
     @Override
     public BookDto create(CreateBookRequestDto requestDto) {
         Book book = bookMapper.toEntity(requestDto);
+        book.setCategories(
+                categoryService.getCategoriesByIds(requestDto.getCategoryIds())
+        );
         bookRepository.save(book);
         return bookMapper.toDto(book);
     }
@@ -50,6 +55,9 @@ public class BookServiceImpl implements BookService {
                         new EntityNotFoundException("Book not found by id: " + id)
                 );
         bookMapper.updateBookFromDto(requestDto, book);
+        book.setCategories(
+                categoryService.getCategoriesByIds(requestDto.getCategoryIds())
+        );
         return bookMapper.toDto(book);
     }
 
