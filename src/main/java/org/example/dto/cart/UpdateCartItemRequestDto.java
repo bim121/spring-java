@@ -1,6 +1,6 @@
 package org.example.dto.cart;
 
-import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -9,6 +9,6 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class UpdateCartItemRequestDto {
-    @Min(1)
+    @Positive
     private int quantity;
 }

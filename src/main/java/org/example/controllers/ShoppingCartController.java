@@ -5,7 +5,6 @@ import jakarta.validation.Valid;
 import java.security.Principal;
 import lombok.RequiredArgsConstructor;
 import org.example.dto.cart.AddToCartRequestDto;
-import org.example.dto.cart.CartItemDto;
 import org.example.dto.cart.ShoppingCartDto;
 import org.example.dto.cart.UpdateCartItemRequestDto;
 import org.example.services.cart.ShoppingCartService;
@@ -33,20 +32,25 @@ public class ShoppingCartController {
         return cartService.getCartByUserEmail(principal.getName());
     }
 
-    @Operation(summary = "Add book to shopping cart")
     @PostMapping
     @PreAuthorize("hasRole('USER')")
-    public CartItemDto addBookToCart(@RequestBody @Valid AddToCartRequestDto dto,
-                                     Principal principal) {
-        return cartService.addBookToCartByUserEmail(principal.getName(), dto);
+    public ShoppingCartDto addBookToCart(
+            @RequestBody @Valid AddToCartRequestDto dto,
+            Principal principal
+    ) {
+        cartService.addBookToCartByUserEmail(principal.getName(), dto);
+        return cartService.getCartByUserEmail(principal.getName());
     }
 
-    @Operation(summary = "Update quantity of book in cart")
     @PutMapping("/items/{cartItemId}")
     @PreAuthorize("hasRole('USER')")
-    public CartItemDto updateCartItem(@PathVariable Long cartItemId,
-                                      @RequestBody @Valid UpdateCartItemRequestDto dto) {
-        return cartService.updateCartItem(cartItemId, dto);
+    public ShoppingCartDto updateCartItem(
+            @PathVariable Long cartItemId,
+            @RequestBody @Valid UpdateCartItemRequestDto dto,
+            Principal principal
+    ) {
+        cartService.updateCartItem(cartItemId, dto);
+        return cartService.getCartByUserEmail(principal.getName());
     }
 
     @Operation(summary = "Remove book from shopping cart")

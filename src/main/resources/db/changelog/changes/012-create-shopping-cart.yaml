@@ -4,7 +4,7 @@ databaseChangeLog:
       author: bim121
       changes:
         - createTable:
-            tableName: shopping_cart
+            tableName: shopping_carts
             columns:
               - column:
                   name: id
@@ -18,12 +18,12 @@ databaseChangeLog:
                   constraints:
                     nullable: false
         - addForeignKeyConstraint:
-            baseTableName: shopping_cart
+            baseTableName: shopping_carts
             baseColumnNames: user_id
             referencedTableName: users
             referencedColumnNames: id
             constraintName: fk_shopping_cart_user
         - addUniqueConstraint:
-            tableName: shopping_cart
+            tableName: shopping_carts
             columnNames: user_id
             constraintName: uk_shopping_cart_user
