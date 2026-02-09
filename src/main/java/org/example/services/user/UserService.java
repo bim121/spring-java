@@ -9,5 +9,7 @@ public interface UserService {
 
     User save(User user);
 
+    Long getUserIdByEmail(String email);
+
     UserResponseDto register(UserRegistrationRequestDto request);
 }
