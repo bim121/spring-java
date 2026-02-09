@@ -1,6 +1,7 @@
 package org.example.mappers;
 
 import org.example.dto.category.CategoryDto;
+import org.example.dto.category.CategoryRequestDto;
 import org.example.model.Category;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
@@ -10,7 +11,7 @@ public interface CategoryMapper {
 
     CategoryDto toDto(Category category);
 
-    Category toEntity(CategoryDto dto);
+    Category toEntity(CategoryRequestDto dto);
 
-    void updateCategoryFromDto(CategoryDto dto, @MappingTarget Category category);
+    void updateCategoryFromDto(CategoryRequestDto dto, @MappingTarget Category category);
 }

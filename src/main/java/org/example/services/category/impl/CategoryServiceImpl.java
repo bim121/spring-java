@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.example.dto.book.BookDtoWithoutCategoryIds;
 import org.example.dto.category.CategoryDto;
+import org.example.dto.category.CategoryRequestDto;
 import org.example.exceptions.EntityNotFoundException;
 import org.example.mappers.BookMapper;
 import org.example.mappers.CategoryMapper;
@@ -44,14 +45,14 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public CategoryDto save(CategoryDto dto) {
+    public CategoryDto save(CategoryRequestDto dto) {
         return categoryMapper.toDto(
                 categoryRepository.save(categoryMapper.toEntity(dto))
         );
     }
 
     @Override
-    public CategoryDto update(Long id, CategoryDto dto) {
+    public CategoryDto update(Long id, CategoryRequestDto dto) {
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() ->
                         new EntityNotFoundException("Category not found: " + id)

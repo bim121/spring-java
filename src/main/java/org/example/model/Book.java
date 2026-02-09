@@ -45,7 +45,7 @@ public class Book {
     private String description;
     private String coverImage;
 
-    @ManyToMany()
+    @ManyToMany
     @JoinTable(
             name = "books_categories",
             joinColumns = @JoinColumn(name = "book_id"),
@@ -55,6 +55,6 @@ public class Book {
     @EqualsAndHashCode.Exclude
     private Set<Category> categories = new HashSet<>();
 
-    @Column(name = "is_deleted", nullable = false)
-    private boolean isDeleted = false;
+    @Column(nullable = false)
+    private boolean isDeleted;
 }
