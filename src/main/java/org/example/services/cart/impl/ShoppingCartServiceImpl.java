@@ -58,4 +58,14 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
                         "Cart not found for user: " + email
                 ));
     }
+
+    @Override
+    public void clearCart(ShoppingCart cart) {
+        cart.getCartItems().clear();
+    }
+
+    @Override
+    public ShoppingCart getCartEntityByUserEmail(String email) {
+        return findCartByUserEmail(email);
+    }
 }
