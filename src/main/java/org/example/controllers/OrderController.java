@@ -1,15 +1,19 @@
 package org.example.controllers;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import java.security.Principal;
-import java.util.List;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.dto.order.CreateOrderRequestDto;
 import org.example.dto.order.OrderDto;
+import org.example.dto.order.OrderItemDto;
 import org.example.enums.OrderStatus;
 import org.example.services.order.OrderService;
+import org.example.services.order.item.OrderItemService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,35 +28,63 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/orders")
 @Tag(name = "Orders", description = "API for managing orders")
 public class OrderController {
-
     private final OrderService orderService;
+    private final OrderItemService orderItemService;
 
-    @Operation(summary = "Place a new order",
-            description = "Creates a new order based on the user's shopping cart")
+    @Operation(
+            summary = "Create order",
+            description = "Creates a new order based on user's shopping cart"
+    )
     @PostMapping
     public OrderDto placeOrder(
-            Principal principal,
-            @RequestBody @Parameter(
-                    description = "Order creation request data") CreateOrderRequestDto dto) {
+            @AuthenticationPrincipal UserDetails userDetails,
+            @RequestBody @Valid CreateOrderRequestDto dto) {
 
-        return orderService.placeOrder(principal.getName(), dto);
+        return orderService.placeOrder(userDetails.getUsername(), dto);
     }
 
-    @Operation(summary = "Get all orders",
-            description = "Returns a list of all orders for the authenticated user")
+    @Operation(
+            summary = "Get user orders",
+            description = "Returns paginated list of user orders"
+    )
     @GetMapping
-    public List<OrderDto> getOrders(
-            Principal principal) {
-        return orderService.getOrders(principal.getName());
+    public Page<OrderDto> getOrders(
+            @AuthenticationPrincipal UserDetails userDetails,
+            Pageable pageable) {
+
+        return orderService.getOrders(userDetails.getUsername(), pageable);
     }
 
-    @Operation(summary = "Update order status",
-            description = "Updates the status of an order by ID")
+    @Operation(summary = "Update order status")
     @PatchMapping("/{orderId}")
     public OrderDto updateStatus(
-            @PathVariable @Parameter(description = "ID of the order to update") Long orderId,
-            @RequestParam @Parameter(description = "New status of the order") OrderStatus status) {
+            @PathVariable Long orderId,
+            @RequestParam OrderStatus status) {
 
         return orderService.updateStatus(orderId, status);
+    }
+
+    @Operation(
+            summary = "Get order items",
+            description = "Returns paginated list of items for specific order"
+    )
+    @GetMapping("/{orderId}/items")
+    public Page<OrderItemDto> getOrderItems(
+            @PathVariable Long orderId,
+            Pageable pageable) {
+
+        return orderItemService.getOrderItems(orderId, pageable);
+    }
+
+    @Operation(
+            summary = "Get order item",
+            description = "Returns specific item from order"
+    )
+    @GetMapping("/{orderId}/items/{itemId}")
+    public OrderItemDto getOrderItem(
+            @PathVariable Long orderId,
+            @PathVariable Long itemId) {
+
+        return orderItemService.getOrderItem(orderId, itemId);
     }
 }

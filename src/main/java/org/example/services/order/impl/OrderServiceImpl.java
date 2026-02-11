@@ -2,10 +2,7 @@ package org.example.services.order.impl;
 
 import jakarta.transaction.Transactional;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.example.dto.order.CreateOrderRequestDto;
 import org.example.dto.order.OrderDto;
@@ -18,6 +15,8 @@ import org.example.model.ShoppingCart;
 import org.example.repositories.OrderRepository;
 import org.example.services.cart.ShoppingCartService;
 import org.example.services.order.OrderService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -32,40 +31,17 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderDto placeOrder(String email, CreateOrderRequestDto dto) {
         ShoppingCart cart = shoppingCartService.getCartEntityByUserEmail(email);
-        if (cart.getCartItems().isEmpty()) {
-            throw new IllegalStateException("Shopping cart is empty");
-        }
-        Order order = new Order();
-        order.setUser(cart.getUser());
-        order.setStatus(OrderStatus.PENDING);
-        order.setOrderDate(LocalDateTime.now());
-        order.setShippingAddress(dto.getShippingAddress());
-        Set<OrderItem> orderItems = cart.getCartItems().stream()
-                .map(cartItem -> {
-                    OrderItem item = new OrderItem();
-                    item.setOrder(order);
-                    item.setBook(cartItem.getBook());
-                    item.setQuantity(cartItem.getQuantity());
-                    item.setPrice(cartItem.getBook().getPrice());
-                    return item;
-                })
-                .collect(Collectors.toSet());
-        order.setOrderItems(orderItems);
-        BigDecimal total = orderItems.stream()
-                .map(i -> i.getPrice()
-                        .multiply(BigDecimal.valueOf(i.getQuantity())))
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-        order.setTotal(total);
-        Order savedOrder = orderRepository.save(order);
+        validateCart(cart);
+        Order order = createOrder(cart, dto);
+        orderRepository.save(order);
         shoppingCartService.clearCart(cart);
-        return orderMapper.toDto(savedOrder);
+        return orderMapper.toDto(order);
     }
 
     @Override
-    public List<OrderDto> getOrders(String userEmail) {
-        return orderRepository.findAllByUserEmail(userEmail).stream()
-                .map(orderMapper::toDto)
-                .toList();
+    public Page<OrderDto> getOrders(String userEmail, Pageable pageable) {
+        return orderRepository.findAllByUserEmail(userEmail, pageable)
+                .map(orderMapper::toDto);
     }
 
     @Override
@@ -75,5 +51,24 @@ public class OrderServiceImpl implements OrderService {
                         new EntityNotFoundException("Order not found: " + orderId));
         order.setStatus(status);
         return orderMapper.toDto(order);
+    }
+
+    private BigDecimal calculateTotal(Set<OrderItem> orderItems) {
+        return orderItems.stream()
+                .map(item -> item.getPrice()
+                        .multiply(BigDecimal.valueOf(item.getQuantity())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    private void validateCart(ShoppingCart cart) {
+        if (cart.getCartItems().isEmpty()) {
+            throw new IllegalStateException("Shopping cart is empty");
+        }
+    }
+
+    private Order createOrder(ShoppingCart cart, CreateOrderRequestDto dto) {
+        Order order = orderMapper.toModel(cart, dto);
+        order.setTotal(calculateTotal(order.getOrderItems()));
+        return order;
     }
 }

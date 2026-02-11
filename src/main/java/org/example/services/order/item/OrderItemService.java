@@ -1,11 +1,12 @@
 package org.example.services.order.item;
 
-import java.util.List;
 import org.example.dto.order.OrderItemDto;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface OrderItemService {
 
-    List<OrderItemDto> getOrderItems(Long orderId);
+    Page<OrderItemDto> getOrderItems(Long orderId, Pageable pageable);
 
     OrderItemDto getOrderItem(Long orderId, Long itemId);
 }
