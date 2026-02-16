@@ -23,7 +23,6 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Transactional
 public class CategoryServiceImpl implements CategoryService {
-
     private final CategoryRepository categoryRepository;
     private final CategoryMapper categoryMapper;
     private final BookRepository bookRepository;
@@ -68,6 +67,10 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public List<BookDtoWithoutCategoryIds> getBooksByCategoryId(Long id) {
+        categoryRepository.findById(id)
+                .orElseThrow(() ->
+                        new EntityNotFoundException("Category not found: " + id));
+        
         return bookRepository.findAllByCategories_Id(id).stream()
                 .map(bookMapper::toDtoWithoutCategories)
                 .toList();
