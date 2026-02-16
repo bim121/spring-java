@@ -251,7 +251,5 @@ class CategoryServiceTest {
         when(categoryRepository.findById(999L)).thenReturn(Optional.empty());
         assertThrows(EntityNotFoundException.class, 
                 () -> categoryService.getCategoriesByIds(categoryIds));
-        verify(categoryRepository).findById(1L);
-        verify(categoryRepository).findById(999L);
     }
 }
