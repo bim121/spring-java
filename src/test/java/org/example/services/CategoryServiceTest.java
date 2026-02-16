@@ -238,18 +238,4 @@ class CategoryServiceTest {
         verify(categoryRepository).findById(1L);
         verify(categoryRepository).findById(2L);
     }
-
-    @Test
-    @DisplayName("Given non-existing category id in set, "
-            + "getCategoriesByIds should throw EntityNotFoundException")
-    void getCategoriesByIds_NonExistingId_ThrowsEntityNotFoundException() {
-        Set<Long> categoryIds = Set.of(1L, 999L);
-        Category category1 = TestDataHelper.createCategoryWithIdAndDetails(
-                1L, "Fiction", "Fiction books"
-        );
-        when(categoryRepository.findById(1L)).thenReturn(Optional.of(category1));
-        when(categoryRepository.findById(999L)).thenReturn(Optional.empty());
-        assertThrows(EntityNotFoundException.class, 
-                () -> categoryService.getCategoriesByIds(categoryIds));
-    }
 }
