@@ -411,6 +411,10 @@ Recommended workflow:
 
 ---
 
+## Video explain
+
+https://www.loom.com/share/874f424a8af04beca94cb82f7741887f
+
 ## Conclusion
 
 This project is a complete and extensible **backend for an online bookstore**, showing:
