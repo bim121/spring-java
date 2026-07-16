@@ -1,0 +1,24 @@
+databaseChangeLog:
+  - changeSet:
+      id: insert-categories
+      author: bim121
+      changes:
+        - insert:
+            tableName: categories
+            columns:
+              - column:
+                  name: name
+                  value: Fiction
+              - column:
+                  name: description
+                  value: Fiction books
+
+        - insert:
+            tableName: categories
+            columns:
+              - column:
+                  name: name
+                  value: Science
+              - column:
+                  name: description
+                  value: Science books
